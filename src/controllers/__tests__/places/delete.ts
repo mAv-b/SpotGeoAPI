@@ -1,70 +1,79 @@
 import request from "supertest";
 import app from '../../../server';
-import { UserService } from "../../../services/users";
-import { PlaceService } from "../../../services/places";
+import * as jwt from 'jsonwebtoken';
+import { User } from "../../../database/models/User";
+import { Place } from "../../../database/models/Place";
 
 describe('### DELETE ###', () => {
-    const user = new UserService('admin@email.com', 'pass');
-    const endpoint = '/places/';
-    const data = {
+  let endpoint: string;
+  let token:string;
+  let id:number;
+
+  beforeAll(async () => {
+    endpoint = '/places/';
+
+    const user = await User.create({
+      email: "user@email.com",
+      name: "user",
+      password: "pass"
+    })
+
+    const place = await Place.create({
       name: "PLACE DELETE 1",
-      latitude: "54.342",
-      longitude: "-74.3"
-    };
-
-    const place = new PlaceService(data, 'POST');
-
-
-    // TEST: delete a place correctly
-    test('should return a confirmation of deletion', async () => {
-      const id = (await place.createPlace())!.dataValues.id;
-
-      await user.getUserInstance();
-      const token = await user.signToken();
-
-      await request(app)
-        .delete(endpoint + id)
-        .set('Authorization', 'Bearer ' + token)
-        .expect(204)
+      point: {
+        type: "Point",
+        coordinates: [-74.3, 54.342]
+      }
     });
 
-    // TEST: delete a place that not exists
-    test('should return not exists place\'s id', async () => {
-      const id = 10;
-
-      await user.getUserInstance();
-      const token = await user.signToken();
-
-      await request(app)
-        .delete(endpoint + id)
-        .set('Authorization', 'Bearer ' + token)
-        .expect(404, {
-          error: "place id not found"
-        });
+    token = jwt.sign({
+      email: user.dataValues.email
+    }, process.env.JWT_SECRET_KEY as string, {
+      "expiresIn": '10m'
     });
 
-    // TEST: delete a place with invalid id
-    test('should return a invalid id error', async () => {
-      const id = 'stiste';
-
-      await user.getUserInstance();
-      const token = await user.signToken();
-
-      await request(app)
-        .delete(endpoint + id)
-        .set('Authorization', 'Bearer ' + token)
-        .expect(400, {
-          error: "invalid parameter"
-        })
-    });
-
-    // TEST: unathorizate delete request
-    test('should return a forbbiden status', async () => {
-      const id = 1;
-
-      await request(app)
-        .delete(endpoint + id)
-        .expect(403);
-    });
+    id = place.dataValues.id;
 
   });
+
+
+  // TEST: delete a place correctly
+  test('should return a confirmation of deletion', async () => {
+    await request(app)
+      .delete(endpoint + id)
+      .set('Authorization', 'Bearer ' + token)
+      .expect(204)
+  });
+
+  // TEST: delete a place that not exists
+  test('should return not exists place\'s id', async () => {
+    const idInvalid = 100;
+
+    await request(app)
+      .delete(endpoint + idInvalid)
+      .set('Authorization', 'Bearer ' + token)
+      .expect(404, {
+        error: "place id not found"
+      });
+  });
+
+  // TEST: delete a place with invalid id
+  test('should return a invalid id error', async () => {
+    const idInvalid = 'stiste';
+
+    await request(app)
+      .delete(endpoint + idInvalid)
+      .set('Authorization', 'Bearer ' + token)
+      .expect(400, {
+        error: "invalid parameter"
+      })
+  });
+
+  // TEST: unathorizate delete request
+  test('should return a forbbiden status', async () => {
+    await request(app)
+      .delete(endpoint + id)
+      .expect(403);
+  });
+
+});
