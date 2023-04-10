@@ -1,22 +1,35 @@
 import * as bcrypt from 'bcrypt';
 import * as dotenv from 'dotenv';
 import * as jwt from 'jsonwebtoken';
-import { User, UserInterface } from "../database/models/User";
+import { User, UserSchema, AuthUserSchema, UserInterface } from "../database/models/User";
+import { validate } from '../database/models';
 
 dotenv.config();
 
 export class UserService {
   user: UserInterface | null = null;
-  bodyEmail: string;
-  bodyPassword: string;
+  requestBody: any = {};
 
-  constructor(email: string, password: string) {
-    this.bodyEmail = email;
-    this.bodyPassword = password;
+  constructor(body: any, isAuthSchema: boolean) {
+
+    let schema;
+    if (isAuthSchema) {
+      schema = AuthUserSchema;
+    } else {
+      schema = UserSchema;
+    }
+
+    const isValidateBody = validate(body, schema);
+    if (!isValidateBody) {
+      throw 'invalid payload request';
+    }
+
+    this.requestBody = body;
   }
 
   async getUserInstance() {
-    const user = await User.findOne({ where: { email: this.bodyEmail } });
+
+    const user = await User.findOne({ where: { email: this.requestBody.email } });
 
     if(!user){
       return null;
@@ -33,7 +46,11 @@ export class UserService {
       return false;
     }
 
-    const isAuthenticate = bcrypt.compareSync(this.bodyPassword, this.user.password);
+    const isAuthenticate = bcrypt.compareSync(
+      this.requestBody.password,
+      this.user.password
+    );
+
     return isAuthenticate;
   }
 
