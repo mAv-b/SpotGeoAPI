@@ -28,13 +28,13 @@ export class UserService {
     return user;
   }
 
-  async authorizationUser() {
+  async authenticateUser() {
     if(!this.user){
       return false;
     }
 
-    const isAuthorizate = bcrypt.compareSync(this.bodyPassword, this.user.password);
-    return isAuthorizate;
+    const isAuthenticate = bcrypt.compareSync(this.bodyPassword, this.user.password);
+    return isAuthenticate;
   }
 
   async signToken() {
@@ -57,7 +57,15 @@ export class UserService {
       return value;
 
     } catch (err) {
-      return {error: "invalid token."};
+      return {error: "Forbbiden request"};
     }
+  }
+
+  static async auth(authHeader: any) {
+    if(!authHeader){
+      return {error: "Forbbiden request"}
+    }
+  
+    return (await this.checkToken(authHeader.split(' ')[1])) as jwt.JwtPayload;
   }
 }

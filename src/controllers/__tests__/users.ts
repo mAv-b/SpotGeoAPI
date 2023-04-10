@@ -3,7 +3,7 @@ import app from '../../server';
 
 describe('### USER CONTROLLERS TESTS ###', () => {
 
-  // TEST FOR GET A TOKEN
+  // TEST: get a token
   test('should return a token for admin user', async () => {
     await request(app)
       .post('/users/login/')
@@ -14,7 +14,7 @@ describe('### USER CONTROLLERS TESTS ###', () => {
       .expect(200);
   });
 
-  // TEST FOR INVALID CREDENTIALS
+  // TEST: invalid credentials
   test('should return a invalid email and password', async () => {
     await request(app)
       .post('/users/login/')

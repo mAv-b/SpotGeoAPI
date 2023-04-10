@@ -1,5 +1,5 @@
 import { DataTypes } from "sequelize";
-import sequelize from "../.";
+import sequelize from "..";
 
 interface UserInterface {
   email: string;

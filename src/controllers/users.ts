@@ -7,7 +7,7 @@ dotenv.config();
 
 export class UserController {
 
-  static async authorization(req: Request, res: Response) {
+  static async authenticate(req: Request, res: Response) {
     const { email, password } = req.body;
     const service = new UserService(email, password);
 
@@ -19,7 +19,7 @@ export class UserController {
       );
     }
 
-    const isAuthorizate = await service.authorizationUser()
+    const isAuthorizate = await service.authenticateUser()
     if (!isAuthorizate) {
       return ResponseHandler.notFoundResponse(
         {error: "Email or Password are invalid."},
