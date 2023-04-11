@@ -5,6 +5,7 @@ const routes = Router();
 
 routes.get('/', AreaControllers.get);
 routes.get('/:id', AreaControllers.get);
+routes.get('/:id/places/', AreaControllers.places);
 
 routes.post('/', AreaControllers.create);
 

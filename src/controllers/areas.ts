@@ -133,4 +133,30 @@ export class AreaControllers {
       return ResponseHandler.internalErrorResponse(err, res);
     }
   }
+
+  static async places(req: Request, res: Response) {
+    try {
+
+      const isAuth = await UserService.auth(req.headers.authorization);
+      if (isAuth['error'] !== undefined) {
+        return ResponseHandler.forbbidenResponse({ error: isAuth.error }, res);
+      }
+
+      const { id } = req.params;
+      if (!id) {
+        return ResponseHandler.badRequestResponse({error: 'invalid parameter'}, res);
+      }
+
+      const idNumber = Number(id);
+      if (isNaN(idNumber) || !Number.isInteger(idNumber)) {
+        return ResponseHandler.badRequestResponse({error: 'invalid parameter'}, res);
+      }
+
+      const places = await AreaService.placesInsideOfArea(idNumber);
+      return ResponseHandler.okResponse(places, res);
+
+    } catch(err) {
+      return ResponseHandler.internalErrorResponse(err, res);
+    }
+  }
 }

@@ -1,5 +1,7 @@
 import * as Area from "../database/models/Area";
 import { validate } from "../database/models";
+import { Place } from "../database/models/Place";
+import { Sequelize } from "sequelize";
 
 export class AreaService {
   requestBody: any;
@@ -29,9 +31,9 @@ export class AreaService {
   }
 
   async createArea() {
-    const {name, coordinates} = this.requestBody;
+    const { name, coordinates } = this.requestBody;
 
-    const alreadyExists = await Area.Area.findOne({ where:{name} });
+    const alreadyExists = await Area.Area.findOne({ where: { name } });
     if (alreadyExists) {
       return null;
     }
@@ -51,12 +53,12 @@ export class AreaService {
     return await Area.Area.findAll();
   }
 
-  static async getSingleArea(id: number|null) {
+  static async getSingleArea(id: number | null) {
     if (!id) {
       return null;
     }
 
-    const area = await Area.Area.findOne({ where:{id} });
+    const area = await Area.Area.findOne({ where: { id } });
     if (!area) {
       return area;
     }
@@ -64,14 +66,14 @@ export class AreaService {
     return area;
   }
 
-  async editArea(id: number|null) {
+  async editArea(id: number | null) {
     if (!id) {
       return null;
     }
 
-    let {name, coordinates} = this.requestBody;
+    let { name, coordinates } = this.requestBody;
 
-    const area = await Area.Area.findOne({ where:{id} });
+    const area = await Area.Area.findOne({ where: { id } });
     if (!area) {
       return area;
     }
@@ -92,17 +94,48 @@ export class AreaService {
     return area;
   }
 
-  static async deleteArea(id: number|null) {
+  static async deleteArea(id: number | null) {
     if (!id) {
       return false;
     }
 
-    const area = await Area.Area.findOne({ where:{id} });
+    const area = await Area.Area.findOne({ where: { id } });
     if (!area) {
       return false;
     }
 
     await area.destroy();
     return true;
+  }
+
+  static async placesInsideOfArea(id: number | null) {
+    if (!id) {
+      return null;
+    }
+
+    const area = await Area.Area.findOne({ where: { id } });
+    if (!area) {
+      return area;
+    }
+
+    const polygon = area.dataValues.polygon;
+    delete polygon.crs;
+
+    const strPolygon = JSON.stringify(polygon);
+    const sequelize = Area.Area.sequelize!;
+
+    const placesInside = await Place.findAll({ where:
+      sequelize.where(
+
+        sequelize.fn('ST_Contains',
+          sequelize.fn('ST_GeomFromGeoJSON', strPolygon),
+          sequelize.col('point')
+        ),
+
+        true
+      )
+    });
+
+    return placesInside;
   }
 }

@@ -162,8 +162,8 @@ export class PlaceService {
 
     const contains: any = await Place.sequelize!.query(
       `SELECT ST_Contains(
-        (SELECT ST_GeomFromGeoJSON('${strPoint}')),
-        (SELECT ST_GeomFromGeoJSON('${strPolygon}'))
+        (SELECT ST_GeomFromGeoJSON('${strPolygon}')),
+        (SELECT ST_GeomFromGeoJSON('${strPoint}'))
       )`
     );
 
