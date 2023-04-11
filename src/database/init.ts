@@ -3,11 +3,13 @@ import * as bcrypt from 'bcrypt';
 import sequelize from ".";
 import { userAttributtes } from "./models/User";
 import { placeAttributtes } from './models/Place';
+import { areaAttributes } from './models/Area';
 
 dotenv.config();
 
 const User = sequelize.define("users", userAttributtes);
 const Place = sequelize.define("places", placeAttributtes);
+const Area = sequelize.define("area", areaAttributes);
 
 sequelize.sync().then(()=>{
   const salt = bcrypt.genSaltSync(10);

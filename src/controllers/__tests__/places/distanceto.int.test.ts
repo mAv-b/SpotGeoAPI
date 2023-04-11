@@ -4,7 +4,7 @@ import * as jwt from 'jsonwebtoken';
 import { Place } from '../../../database/models/Place';
 import { User } from '../../../database/models/User';
 
-describe('### DISTANCE TO ROUTE ###', () => {
+describe('Places Tests: Distanceto', () => {
   let placesEndpoint: string;
   let distanceToEndpoint: string;
   let id1: number;

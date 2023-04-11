@@ -7,7 +7,7 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-describe('### PUT ###', () => {
+describe('Places Tests: PUT', () => {
   let endpoint: string;
   let payload: any;
   let token: string;

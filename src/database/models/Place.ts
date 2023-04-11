@@ -37,4 +37,4 @@ const placeAttributtes = {
 
 const Place = sequelize.define("places", placeAttributtes);
 
-export { Place, placeAttributtes, PlaceSchema, PutPlaceSchema}
+export { Place, placeAttributtes, PlaceSchema, PutPlaceSchema};

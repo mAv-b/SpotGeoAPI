@@ -7,7 +7,7 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-describe('### GET ###', () => {
+describe('Places Tests: GET', () => {
   let endpoint: string;
   let token: string;
   let id: number;

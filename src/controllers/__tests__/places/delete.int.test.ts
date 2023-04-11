@@ -4,7 +4,7 @@ import * as jwt from 'jsonwebtoken';
 import { User } from "../../../database/models/User";
 import { Place } from "../../../database/models/Place";
 
-describe('### DELETE ###', () => {
+describe('Places Tests: DELETE', () => {
   let endpoint: string;
   let token:string;
   let id:number;
