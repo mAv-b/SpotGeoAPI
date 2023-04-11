@@ -5,6 +5,7 @@ const routes = Router();
 
 routes.get("/", PlaceController.get);
 routes.get("/:id", PlaceController.get);
+routes.get("/:id1/distanceto/:id2", PlaceController.distanceto);
 
 routes.post("/", PlaceController.create);
 

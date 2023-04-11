@@ -5,7 +5,7 @@ import { Place } from "../database/models/Place";
 export class PlaceService {
   requestBody: any = {};
 
-  constructor(body: any, method: 'POST'|'PUT') {
+  constructor(body: any, method: 'POST' | 'PUT') {
 
     let schema;
     if (method === 'PUT') {
@@ -15,19 +15,19 @@ export class PlaceService {
     }
 
     const isValidateBody = validate(body, schema);
-    if(!isValidateBody){
+    if (!isValidateBody) {
       throw "invalid payload request";
     }
-    
+
     const numLat = Number(body.latitude) || 0;
     const numLong = Number(body.longitude) || 0;
 
-    if(isNaN(numLat) || isNaN(numLong)){
+    if (isNaN(numLat) || isNaN(numLong)) {
       throw "invalid payload request";
     }
 
     for (let key of Object.keys(body)) {
-      if (key === 'name'){
+      if (key === 'name') {
         this.requestBody[key] = body[key]
       } else {
         this.requestBody[key] = Number(body[key]);
@@ -38,8 +38,8 @@ export class PlaceService {
   async createPlace() {
     const { name, longitude, latitude } = this.requestBody;
 
-    const alreadyExists = await Place.findOne({ where: { name:name } });
-    if(alreadyExists){
+    const alreadyExists = await Place.findOne({ where: { name: name } });
+    if (alreadyExists) {
       return null;
     }
 
@@ -59,7 +59,7 @@ export class PlaceService {
       return null;
     }
 
-    const place = await Place.findOne({ where: {id} });
+    const place = await Place.findOne({ where: { id } });
     return place;
   }
 
@@ -73,7 +73,7 @@ export class PlaceService {
       return null
     }
 
-    const deletedRows = Place.destroy( {where: {id}} );
+    const deletedRows = Place.destroy({ where: { id } });
 
     return deletedRows;
   }
@@ -85,9 +85,9 @@ export class PlaceService {
       return null;
     }
 
-    const place = await Place.findOne({ where: {id} });
-    
-    if(!place){
+    const place = await Place.findOne({ where: { id } });
+
+    if (!place) {
       return place;
     }
 
@@ -107,5 +107,32 @@ export class PlaceService {
     await place.save();
 
     return place;
+  }
+
+  static async pointsDistance(id1: number | null, id2: number | null) {
+    const place1 = await Place.findOne({ where: { id: id1 } });
+    const place2 = await Place.findOne({ where: { id: id2 } });
+
+    if (!place1 || !place2) {
+      return null;
+    }
+
+    const pointOne = place1.dataValues.point;
+    const pointTwo = place2.dataValues.point;
+
+    delete pointOne.crs;
+    delete pointTwo.crs;
+
+    const strPointOne = JSON.stringify(pointOne);
+    const strPointTwo = JSON.stringify(pointTwo);
+
+    const distance: any = await Place.sequelize!.query(
+      `SELECT ST_Distance(
+        (SELECT ST_GeomFromGeoJSON('${strPointOne}')),
+        (SELECT ST_GeomFromGeoJSON('${strPointTwo}'))
+      )`
+    );
+
+    return distance;
   }
 }

@@ -120,4 +120,40 @@ export class PlaceController {
       ResponseHandler.internalErrorResponse(err, res);
     }
   }
+
+  // in meters
+  static async distanceto(req: Request, res: Response) {
+    try {
+
+      const isAuth = await UserService.auth(req.headers.authorization);
+      if (isAuth['error'] !== undefined) {
+        return ResponseHandler.forbbidenResponse({ error: isAuth.error }, res);
+      }
+
+      const { id1, id2 } = req.params;
+
+      const id1Number = Number(id1);
+      const id2Number = Number(id2);
+
+      const invalidId1 = isNaN(id1Number) || !Number.isInteger(id1Number);
+      const invalidId2 = isNaN(id2Number) || !Number.isInteger(id2Number)
+
+      if (invalidId1 || invalidId2) {
+        return ResponseHandler.badRequestResponse({ error: "invalid parameter" }, res);
+      }
+
+      const distance = await PlaceService.pointsDistance(id1Number, id2Number);
+
+      if (!distance) {
+        return ResponseHandler.notFoundResponse({ error:"place not found" }, res);
+      }
+
+      const [[st_distance]] = distance;
+
+      return ResponseHandler.okResponse(st_distance, res);
+
+    } catch(err) {
+      ResponseHandler.internalErrorResponse(err, res);
+    }
+  }
 }

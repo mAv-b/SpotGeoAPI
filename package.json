@@ -9,7 +9,7 @@
     "build:watch": "npm run clean && tsc --watch",
     "start": "nodemon build/src/",
     "dev": "nodemon build/src/ -e ts,json",
-    "test": "jest --detectOpenHandles"
+    "test:integration": "jest --detectOpenHandles int"
   },
   "keywords": [],
   "author": "",
