@@ -145,14 +145,46 @@ export class PlaceController {
       const distance = await PlaceService.pointsDistance(id1Number, id2Number);
 
       if (!distance) {
-        return ResponseHandler.notFoundResponse({ error:"place not found" }, res);
+        return ResponseHandler.notFoundResponse({ error: "place not found" }, res);
       }
 
       const [[st_distance]] = distance;
 
       return ResponseHandler.okResponse(st_distance, res);
 
-    } catch(err) {
+    } catch (err) {
+      ResponseHandler.internalErrorResponse(err, res);
+    }
+  }
+
+  static async isInsideOf(req: Request, res: Response) {
+    try {
+
+      const isAuth = await UserService.auth(req.headers.authorization);
+      if (isAuth['error'] !== undefined) {
+        return ResponseHandler.forbbidenResponse({ error: isAuth.error }, res);
+      }
+
+      const { idPlace, idArea } = req.params;
+
+      const idPlaceNumber = Number(idPlace);
+      const idAreaNumber = Number(idArea);
+
+      const validIdPlaidPlace = isNaN(idPlaceNumber) || !Number.isInteger(idPlaceNumber);
+      const validIdArea = isNaN(idAreaNumber) || !Number.isInteger(idAreaNumber);
+
+      if (validIdPlaidPlace || validIdArea) {
+        return ResponseHandler.badRequestResponse({error: 'invalid parameter'}, res);
+      }
+
+      const search = await PlaceService.isPlaceInsideArea(idPlaceNumber, idAreaNumber);
+      if (!search) {
+        return ResponseHandler.notFoundResponse({error: 'place or area not found'}, res);
+      }
+
+      return ResponseHandler.okResponse({insideof: search.st_contains}, res);
+
+    } catch (err) {
       ResponseHandler.internalErrorResponse(err, res);
     }
   }

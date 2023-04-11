@@ -1,4 +1,5 @@
 import { validate, required } from "../database/models";
+import { Area } from "../database/models/Area";
 import { PlaceSchema, PutPlaceSchema } from "../database/models/Place";
 import { Place } from "../database/models/Place";
 
@@ -134,5 +135,39 @@ export class PlaceService {
     );
 
     return distance;
+  }
+
+  static async isPlaceInsideArea(idPlace: number|null, idArea: number|null) {
+    if (!idPlace || !idArea) {
+      return false;
+    }
+    const place = await Place.findOne({ where:{id: idPlace} });
+    if (!place) {
+      return false
+    }
+    
+    const area = await Area.findOne({ where:{id: idArea} });
+    if (!area) {
+      return false;
+    }
+
+    const point = place.dataValues.point;
+    delete point.crs;
+
+    const polygon = area.dataValues.polygon;
+    delete polygon.crs;
+
+    const strPoint = JSON.stringify(point);
+    const strPolygon = JSON.stringify(polygon);
+
+    const contains: any = await Place.sequelize!.query(
+      `SELECT ST_Contains(
+        (SELECT ST_GeomFromGeoJSON('${strPoint}')),
+        (SELECT ST_GeomFromGeoJSON('${strPolygon}'))
+      )`
+    );
+
+    return contains[0][0];
+    
   }
 }
