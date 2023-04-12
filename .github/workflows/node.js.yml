@@ -56,12 +56,12 @@ jobs:
         PASSWORD: postgres
         HOST: localhost
     
-    # - run: npm run test:integration
-    #   env:
-    #     DATABASE: postgres
-    #     DB_USERNAME: postgres
-    #     PASSWORD: postgres
-    #     HOST: postgres
-    #     DB_PORT: 5432
-    #     PORT: 3000
-    #     JWT_SECRET_KEY: secret
+    - run: npm run test:integration
+      env:
+        DATABASE: postgres
+        DB_USERNAME: postgres
+        PASSWORD: postgres
+        HOST: postgres
+        DB_PORT: 5432
+        PORT: 3000
+        JWT_SECRET_KEY: secret
