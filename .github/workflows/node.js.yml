@@ -47,5 +47,11 @@ jobs:
     
     - name: Connect to postgresSQL
       run: node ./build/src/database/init.js
+      env:
+        DATABASE: SpotAPIDB
+        DB_USERNAME: postgres
+        PASSWORD: postgres
+        HOST: postgres
+        DB_PORT: 5432
     
     - run: npm run test:integration
