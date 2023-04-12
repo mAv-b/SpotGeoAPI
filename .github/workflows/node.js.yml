@@ -48,10 +48,13 @@ jobs:
       run: npm run build --if-present
     
     - name: Connect to postgresSQL
-      run: node ./build/src/database/test.js
+      run: node ./build/src/database/init.js
       env:
-        POSTGRES_HOST: localhost
-        POSTGRES_PORT: 5432
+        DATABASE: postgres
+        DB_PORT: 5432
+        DB_USERNAME: postgres
+        PASSWORD: postgres
+        DB_HOST: localhost
     
     # - run: npm run test:integration
     #   env:
