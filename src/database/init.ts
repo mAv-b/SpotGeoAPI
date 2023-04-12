@@ -43,8 +43,10 @@ const migrateData = async () => {
       logging: false
     })
 
-  // const addPostGis = `CREATE EXTENSION postgis`;
-  // await sequelize.query(addPostGis);
+  try {
+    const addPostGis = `CREATE EXTENSION postgis`;
+    await sequelize.query(addPostGis);
+  } catch(err) {};
 
   const User = sequelize.define("users", userAttributtes);
   const Place = sequelize.define("places", placeAttributtes);
