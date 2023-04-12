@@ -11,7 +11,7 @@ on:
 
 jobs:
       
-  build & test-int:
+  build_test-int:
 
     runs-on: ubuntu-latest
     
