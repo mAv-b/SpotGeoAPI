@@ -46,11 +46,14 @@ const migrateData = async () => {
   try {
     const addPostGis = `CREATE EXTENSION postgis`;
     await sequelize.query(addPostGis);
-  } catch(err) {};
+  } catch(err) {
+    null
+  }
 
   const User = sequelize.define("users", userAttributtes);
-  const Place = sequelize.define("places", placeAttributtes);
-  const Area = sequelize.define("area", areaAttributes);
+  
+  sequelize.define("places", placeAttributtes);
+  sequelize.define("area", areaAttributes);
 
   sequelize.sync().then(() => {
     const salt = bcrypt.genSaltSync(10);
@@ -118,7 +121,7 @@ const command = process.argv.splice(2)[0];
 if (command === '--DB') {
   createDatabase().then(() => {
     console.log('DATABASE CREATED');
-  }).catch(_ => {
+  }).catch(() => {
     console.log('FAIL IN CREATE DATABASE');
   });
 
@@ -126,7 +129,7 @@ if (command === '--DB') {
 
   cleanDatabase().then(() => {
     console.log('DATABASE CLEANED');
-  }).catch(_ => {
+  }).catch(() => {
     console.log('FAIL TO CLEAN DATABASE');
   })
 

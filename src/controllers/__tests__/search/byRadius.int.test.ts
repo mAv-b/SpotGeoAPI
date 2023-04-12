@@ -8,15 +8,15 @@ import { Place } from '../../../database/models/Place';
 describe('Search Tests: ByRadius', () =>{
   let endpoint: string;
   let token: string;
-  let radius = 15.0
-  let latitude = 0.0;
-  let longitude = 0.0;
+  const radius = 15.0
+  const latitude = 0.0;
+  const longitude = 0.0;
   let getSearchQuery: any;
 
   beforeAll(async () => {
     endpoint = '/search';
 
-    const area = await Area.create({
+    await Area.create({
       name: 'area test search 1',
       polygon: {
         type: 'Polygon',
@@ -26,7 +26,7 @@ describe('Search Tests: ByRadius', () =>{
       }
     })
 
-    const place = await Place.create({
+    await Place.create({
       name: 'place test search 1',
       point: {
         type: 'Point',

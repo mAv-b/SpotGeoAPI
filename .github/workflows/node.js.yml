@@ -68,3 +68,6 @@ jobs:
         DB_PORT: 5432
         PORT: 3000
         JWT_SECRET_KEY: secret
+
+    - name: Run ESLint
+      run: npm run lint

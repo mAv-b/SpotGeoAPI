@@ -4,7 +4,7 @@ type Schema = {
 }
 
 function required(obj: any, required: string[]) {
-  for (let key of required) {
+  for (const key of required) {
     if (obj[key] === undefined)
       return false;
   }
@@ -20,7 +20,7 @@ function validate(obj: any, schema: Schema) {
     }
   }
 
-  for (let key of Object.keys(obj)) {
+  for (const key of Object.keys(obj)) {
     if (schema.fields[key] === undefined){
       return false;
     } else if (typeof obj[key] !== schema.fields[key]){

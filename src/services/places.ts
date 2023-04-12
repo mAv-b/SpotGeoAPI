@@ -1,4 +1,4 @@
-import { validate, required } from "../database/models";
+import { validate } from "../database/models";
 import { Area } from "../database/models/Area";
 import { PlaceSchema, PutPlaceSchema } from "../database/models/Place";
 import { Place } from "../database/models/Place";
@@ -27,7 +27,7 @@ export class PlaceService {
       throw "invalid payload request";
     }
 
-    for (let key of Object.keys(body)) {
+    for (const key of Object.keys(body)) {
       if (key === 'name') {
         this.requestBody[key] = body[key]
       } else {

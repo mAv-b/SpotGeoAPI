@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint . --ext .ts",
     "clean": "rimraf ./build",
     "build": "npm run clean && tsc",
     "build:watch": "npm run clean && tsc --watch",

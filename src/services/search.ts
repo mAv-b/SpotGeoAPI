@@ -44,7 +44,7 @@ export class SearchService {
       )
     });
 
-    for(let i in places){
+    for(const i in places){
       const entity = places[i].point;
       delete entity.crs;
 

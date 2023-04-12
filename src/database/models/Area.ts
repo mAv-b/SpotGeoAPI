@@ -37,7 +37,7 @@ const checkPolygonObject = (polygon: object) => {
   return polygon.every((i)=>{
     if (!Array.isArray(i) || i.length < 2) return false;
 
-    for (let value of i) {
+    for (const value of i) {
       if (typeof value !== 'number') return false;
     }
     return true;

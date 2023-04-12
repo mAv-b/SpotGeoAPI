@@ -1,7 +1,7 @@
 import * as Area from "../database/models/Area";
 import { validate } from "../database/models";
 import { Place } from "../database/models/Place";
-import { Sequelize } from "sequelize";
+// import { Sequelize } from "sequelize";
 
 export class AreaService {
   requestBody: any;
