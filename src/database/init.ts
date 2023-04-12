@@ -24,7 +24,7 @@ const createDatabase = async () => {
     await client.query(databaseQuery);
 
   } catch(err) {
-    console.error("opa");
+    console.error(err);
   } finally {
     await client.end();
   }
@@ -43,8 +43,8 @@ const migrateData = async () => {
       logging: false
     })
 
-  const addPostGis = `CREATE EXTENSION postgis`;
-  await sequelize.query(addPostGis);
+  // const addPostGis = `CREATE EXTENSION postgis`;
+  // await sequelize.query(addPostGis);
 
   const User = sequelize.define("users", userAttributtes);
   const Place = sequelize.define("places", placeAttributtes);
