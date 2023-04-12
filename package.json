@@ -9,7 +9,10 @@
     "build:watch": "npm run clean && tsc --watch",
     "start": "nodemon build/src/",
     "dev": "nodemon build/src/ -e ts,json",
-    "test:integration": "jest --detectOpenHandles int"
+    "test:integration": "jest --detectOpenHandles int",
+    "createdb": "npm run build && node ./build/src/database/init.js --DB",
+    "migrate": "npm run build && node ./build/src/database/init.js",
+    "cleandb": "npm run build && node ./build/src/database/init.js"
   },
   "keywords": [],
   "author": "",
