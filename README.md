@@ -91,6 +91,7 @@
   ```
     npm run test:integration
   ```
+  <b>Observação:</b> Caso queira rodar uma segunda vez os testes, verifique em rodar `npm run cleandb`, e rodar o migrate novamente.
 
 [contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
 [contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
