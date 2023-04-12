@@ -20,14 +20,6 @@ sequelize.sync().then(()=>{
     password: bcrypt.hashSync("pass", salt)
   });
 
-  // Place.create({
-  //   name:"Plaza Test",
-  //   point: {
-  //     type: 'Point',
-  //     coordinates: [-45.22, -22.8]
-  //   }
-  // });
-
   console.log("Initializated.");
   
 }).catch(err =>{
