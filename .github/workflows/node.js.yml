@@ -51,7 +51,7 @@ jobs:
         DATABASE: postgres
         DB_USERNAME: postgres
         PASSWORD: postgres
-        HOST: postgres
+        HOST: localhost
         DB_PORT: 5432
     
     - run: npm run test:integration
