@@ -4,13 +4,24 @@ const pg = new Client({
   host: process.env.POSTGRES_HOST,
   port: Number(process.env.POSTGRES_PORT),
   user: 'postgres',
-  password: 'postgres',
-  database: 'postgres'
+  password: 'postgres'
 })
 
-pg.connect();
+const create = async () => {
+  try {
+    await pg.connect();
+    await pg.query('CREATE DATABASE my_database');
+    return true;
+  } catch(err) {
+    console.error(err);
+    return false;
+  } finally {
+    await pg.end();
+  }
+}
 
-const table = 'CREATE TABLE student(id SERIAL PRIMARY KEY)';
-pg.query(table, (err, res) =>{
-  if (err) throw err;
-});
+create().then((res) => {
+  if (res) {
+    console.log('yeah');
+  }
+})
